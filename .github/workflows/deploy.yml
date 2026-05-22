@@ -24,6 +24,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # GitHub Pages 子路径：仓库名为 Mahoyo
+          PATH_PREFIX: /Mahoyo
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

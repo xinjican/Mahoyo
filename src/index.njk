@@ -33,8 +33,8 @@ title: 日志
         cursor: pointer;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       "
-      onclick="window.location.href='{{ post.url }}';"
-      onkeydown="if(event.key==='Enter') window.location.href='{{ post.url }}';"
+      onclick="window.location.href='{{ post.url | url }}';"
+      onkeydown="if(event.key==='Enter') window.location.href='{{ post.url | url }}';"
       tabindex="0"
       role="link"
       >
@@ -42,7 +42,7 @@ title: 日志
           font-size: 1.2rem;
           margin: 0 0 0.4em;
         ">
-          <a href="{{ post.url }}" style="
+          <a href="{{ post.url | url }}" style="
             color: var(--text-primary);
             border-bottom: none;
             text-decoration: none;

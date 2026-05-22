@@ -1,7 +1,11 @@
+// pathPrefix 通过环境变量传入，不硬编码
+// 本地开发不设置 → 空字符串，访问 localhost:8080/
+// GitHub Pages 在 Actions 中设置 PATH_PREFIX=/Mahoyo/
+// 自定义域名不设置 → 空字符串，直接根路径
+const pathPrefix = process.env.PATH_PREFIX || "";
+
 module.exports = function (eleventyConfig) {
   // 注册 Nunjucks date 过滤器
-  // 支持标准格式: YYYY, YYYY-MM, YYYY-MM-DD
-  // 也支持带分隔符格式: YYYY.M.D, YYYY/MM/DD
   eleventyConfig.addNunjucksFilter("date", function (date, format) {
     const d = new Date(date);
     if (isNaN(d.getTime())) return String(date);
@@ -13,7 +17,6 @@ module.exports = function (eleventyConfig) {
       return `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     }
 
-    // 替换格式字符串中的占位符
     return format
       .replace(/YYYY/g, String(y))
       .replace(/YY/g, String(y).slice(-2))
@@ -26,8 +29,9 @@ module.exports = function (eleventyConfig) {
   // 全局数据：当前时间
   eleventyConfig.addGlobalData("now", () => new Date().toISOString());
 
-  // 输入输出路径
   return {
+    // 不同平台通过环境变量 PATH_PREFIX 控制链接前缀
+    pathPrefix,
     dir: {
       input: "src",
       output: "_site",

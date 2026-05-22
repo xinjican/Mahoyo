@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="{{ description or '魔法使之夜 — 美学博客' }}" />
   <title>{{ title or '魔法使之夜' }} — 久远寺洋馆日志</title>
-  <link rel="stylesheet" href="/css/global.css" />
-  <script defer src="/js/engine.js"></script>
+  <link rel="stylesheet" href="{{ '/css/global.css' | url }}" />
+  <script defer src="{{ '/js/engine.js' | url }}"></script>
 </head>
 <body>
   {% include "components/header.njk" %}
