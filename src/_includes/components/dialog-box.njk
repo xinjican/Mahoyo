@@ -1,0 +1,8 @@
+{% macro glass(content, class="") %}
+<div class="glass {{ class }}" style="
+  padding: 2em;
+  margin-bottom: 2em;
+">
+  {{ content | safe }}
+</div>
+{% endmacro %}

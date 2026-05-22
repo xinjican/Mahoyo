@@ -1,0 +1,265 @@
+/* ========================================
+   《魔法使之夜》 — 全局设计系统
+   (久远寺洋馆-有珠之夜 / 第五魔法-青子之蓝)
+   ======================================== */
+
+/* --- 字体引入 --- */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap");
+
+/* --- CSS 变量：双主题系统 --- */
+:root,
+[data-theme="aoko"] {
+  /* 青子之蓝（现代亮色） */
+  --bg-main: #f4f6f9;
+  --bg-surface: rgba(255, 255, 255, 0.8);
+  --bg-surface-border: rgba(0, 0, 0, 0.06);
+  --text-primary: #1e2330;
+  --text-secondary: #4a5165;
+  --text-muted: #8b90a0;
+  --accent: #00bfff;
+  --accent-glow: rgba(0, 191, 255, 0.25);
+  --divider: rgba(0, 0, 0, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.06);
+  --selection-bg: rgba(0, 191, 255, 0.2);
+}
+
+[data-theme="alice"] {
+  /* 有珠之夜（默认暗色） */
+  --bg-main: #090a0f;
+  --bg-surface: rgba(20, 22, 33, 0.65);
+  --bg-surface-border: rgba(168, 85, 247, 0.12);
+  --text-primary: #d2d6dc;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --accent: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.3);
+  --divider: rgba(255, 255, 255, 0.06);
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --selection-bg: rgba(168, 85, 247, 0.25);
+}
+
+/* --- 基础重置 --- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--text-primary);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: "Noto Serif SC", "Tsukushi Mincho", "Yu Mincho", "游明朝",
+    "Hiragino Mincho ProN", "HiraMinProN-W3", serif;
+  line-height: 1.85;
+  font-size: 1.05rem;
+  transition: background-color 0.6s ease, color 0.6s ease;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- 装饰性背景光晕 --- */
+body::before {
+  content: "";
+  position: fixed;
+  top: -30%;
+  left: -20%;
+  width: 70vmax;
+  height: 70vmax;
+  background: radial-gradient(
+    circle at 30% 40%,
+    var(--accent-glow) 0%,
+    transparent 70%
+  );
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.8s ease;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 50vmax;
+  height: 50vmax;
+  background: radial-gradient(
+    circle at 60% 50%,
+    var(--accent-glow) 0%,
+    transparent 60%
+  );
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.8s ease;
+}
+
+/* --- 排版 --- */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.8em;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-top: 1.5em;
+  margin-bottom: 0.4em;
+}
+
+p {
+  margin-bottom: 2em;
+  letter-spacing: 0.02em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover {
+  border-bottom-color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* --- 毛玻璃容器 --- */
+.glass {
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-surface-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px var(--shadow-color);
+  transition: background 0.5s ease, border-color 0.5s ease,
+    box-shadow 0.5s ease;
+}
+
+/* --- 极细分隔线 --- */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--divider);
+  margin: 3em 0;
+}
+
+/* --- 代码块 --- */
+pre,
+code {
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  font-size: 0.9rem;
+}
+
+pre {
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-surface-border);
+  border-radius: 8px;
+  padding: 1.2em 1.5em;
+  overflow-x: auto;
+  margin-bottom: 2em;
+}
+
+code {
+  background: var(--bg-surface);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* --- 列表 --- */
+ul,
+ol {
+  margin-bottom: 2em;
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* --- 引用块 --- */
+blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.2em;
+  margin: 1.5em 0 2em;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* --- 图片 --- */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5em 0;
+}
+
+/* --- 过渡动画工具类 --- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-strong {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.fade-in-strong.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- 响应式 --- */
+@media (max-width: 768px) {
+  body {
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}

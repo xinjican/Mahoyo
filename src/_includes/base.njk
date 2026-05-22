@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="alice">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{{ description or '魔法使之夜 — 美学博客' }}" />
+  <title>{{ title or '魔法使之夜' }} — 久远寺洋馆日志</title>
+  <link rel="stylesheet" href="/css/global.css" />
+  <script defer src="/js/engine.js"></script>
+</head>
+<body>
+  {% include "components/header.njk" %}
+
+  <main class="fade-in">
+    {{ content | safe }}
+  </main>
+
+  <footer style="
+    text-align: center;
+    padding: 3em 1.5em 2em;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  ">
+    <hr />
+    <p style="margin-bottom: 0.5em;">
+      久远寺洋馆 · 三咲町
+    </p>
+    <p style="margin-bottom: 0;">
+      &copy; {{ now | date("YYYY") }}
+      — 魔法使之夜 美学博客
+    </p>
+  </footer>
+</body>
+</html>

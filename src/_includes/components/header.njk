@@ -1,0 +1,59 @@
+<header style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0.8em 2em;
+  transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+">
+  <nav style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 840px;
+    margin: 0 auto;
+  ">
+    <a href="/" style="
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.08em;
+      border-bottom: none;
+      text-decoration: none;
+    ">久远寺洋馆</a>
+
+    <div style="display: flex; align-items: center; gap: 1.5em;">
+      <span style="
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+      ">Mahōtsukai no Yoru</span>
+
+      <button class="theme-toggle" aria-label="切换主题" style="
+        background: none;
+        border: 1px solid var(--bg-surface-border);
+        border-radius: 6px;
+        padding: 0.35em 0.7em;
+        font-size: 0.9rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      ">✦</button>
+    </div>
+  </nav>
+</header>
+
+<style>
+  header.header-scrolled {
+    background: var(--bg-surface);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 2px 20px var(--shadow-color);
+  }
+  button.theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+</style>

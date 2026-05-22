@@ -1,0 +1,59 @@
+---
+layout: base.njk
+---
+
+<article style="
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 7em 1.5em 4em;
+">
+  <header style="margin-bottom: 3em;">
+    <h1 class="fade-in-strong">{{ title }}</h1>
+
+    {% if date %}
+    <p class="fade-in" style="
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    ">
+      <time class="post-date" datetime="{{ date | date("YYYY-MM-DD") }}">{{ date | date("YYYY.M.D") }}</time>
+    </p>
+    {% endif %}
+
+    {% if tags %}
+    <div class="fade-in" style="
+      display: flex;
+      gap: 0.5em;
+      flex-wrap: wrap;
+      margin-top: 1em;
+    ">
+      {% for tag in tags %}
+      <span style="
+        font-size: 0.75rem;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 4px;
+        padding: 0.2em 0.6em;
+        letter-spacing: 0.03em;
+      ">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <div class="fade-in" style="font-size: 1.05rem;">
+    {{ content | safe }}
+  </div>
+
+  <nav style="
+    margin-top: 4em;
+    padding-top: 2em;
+    border-top: 1px solid var(--divider);
+    font-size: 0.9rem;
+  ">
+    <a href="/" style="
+      color: var(--text-muted);
+      border-bottom: none;
+    ">← 返回日志列表</a>
+  </nav>
+</article>

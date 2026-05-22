@@ -1,0 +1,13 @@
+{
+  "name": "mahoyo-blog",
+  "version": "1.0.0",
+  "description": "《魔法使之夜》美学风格博客 — 基于 11ty 与纯原生前端技术",
+  "scripts": {
+    "build": "npx @11ty/eleventy",
+    "serve": "npx @11ty/eleventy --serve",
+    "start": "npx @11ty/eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

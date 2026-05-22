@@ -1,0 +1,94 @@
+---
+layout: base.njk
+title: 日志
+---
+
+<div style="
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 7em 1.5em 4em;
+">
+  <!-- Hero -->
+  <section style="margin-bottom: 4em; text-align: center;">
+    <h1 class="fade-in-strong hero-title" style="
+      font-size: 2.8rem;
+      margin-bottom: 0.3em;
+      letter-spacing: 0.12em;
+    ">久远寺洋馆</h1>
+    <p class="fade-in hero-sub" style="
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+    ">— 魔法使之夜 · 美学日志 —</p>
+  </section>
+
+  <!-- Posts -->
+  <section>
+    {% set posts = collections.posts | reverse %}
+    {% if posts | length %}
+      {% for post in posts %}
+      <article class="glass post-entry fade-in" style="
+        padding: 1.5em 2em;
+        margin-bottom: 1.5em;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      "
+      onclick="window.location.href='{{ post.url }}';"
+      onkeydown="if(event.key==='Enter') window.location.href='{{ post.url }}';"
+      tabindex="0"
+      role="link"
+      >
+        <h2 style="
+          font-size: 1.2rem;
+          margin: 0 0 0.4em;
+        ">
+          <a href="{{ post.url }}" style="
+            color: var(--text-primary);
+            border-bottom: none;
+            text-decoration: none;
+          ">{{ post.data.title }}</a>
+        </h2>
+
+        {% if post.data.date %}
+        <p style="
+          color: var(--text-muted);
+          font-size: 0.8rem;
+          margin-bottom: 0.6em;
+          letter-spacing: 0.05em;
+        ">
+          <time class="post-date" datetime="{{ post.data.date }}">{{ post.data.date }}</time>
+        </p>
+        {% endif %}
+
+        {% if post.data.description %}
+        <p style="
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+          line-height: 1.7;
+          margin-bottom: 0;
+        ">{{ post.data.description }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="glass fade-in" style="
+        padding: 3em 2em;
+        text-align: center;
+        color: var(--text-muted);
+      ">
+        <p style="margin-bottom: 0.5em;">还没有日志。</p>
+        <p style="font-size: 0.85rem;">在 <code>src/posts/</code> 目录下创建 .md 文件即可添加。</p>
+      </div>
+    {% endif %}
+  </section>
+</div>
+
+<style>
+  .post-entry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px var(--shadow-color);
+  }
+  .post-entry h2 a:hover {
+    color: var(--accent);
+  }
+</style>
