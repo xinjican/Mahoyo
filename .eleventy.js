@@ -1,4 +1,5 @@
 const pathPrefix = process.env.PATH_PREFIX || "";
+const siteUrl = process.env.SITE_URL || "https://xinjican.github.io/Mahoyo";
 const CleanCSS = require("clean-css");
 const pluginRss = require("@11ty/eleventy-plugin-rss");
 const { execSync } = require("child_process");
@@ -44,7 +45,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addGlobalData("metadata", {
     title: "久远寺洋馆",
     subtitle: "《魔法使之夜》美学博客 — 基于 11ty 与纯原生前端技术",
-    url: "https://xinjican.github.io/Mahoyo", // 修正为用户的实际 GitHub Pages 地址
+    url: siteUrl, // 支持动态配置网站 URL (如 Cloudflare Pages 自定义域名)
     author: {
       name: "久远寺有珠 & 苍崎青子",
       email: "alice@kuonji.mansion"
