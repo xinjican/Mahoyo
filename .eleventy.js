@@ -2,7 +2,6 @@ const pathPrefix = process.env.PATH_PREFIX || "";
 const CleanCSS = require("clean-css");
 const pluginRss = require("@11ty/eleventy-plugin-rss");
 const { execSync } = require("child_process");
-
 module.exports = function (eleventyConfig) {
   // 注册 RSS 插件 (处理 ESM 导出兼容性)
   eleventyConfig.addPlugin(pluginRss.default || pluginRss);
@@ -33,14 +32,19 @@ module.exports = function (eleventyConfig) {
     return new CleanCSS({}).minify(code).styles;
   });
 
+  // 调试 URL 过滤器的中间件已移除，使用原生的 HTML Base Plugin 处理
+
   // 全局数据：当前时间
   eleventyConfig.addGlobalData("now", () => new Date().toISOString());
+
+  // 全局数据：路径前缀
+  eleventyConfig.addGlobalData("pathPrefix", pathPrefix);
 
   // 全局数据：网站元数据 (SEO / RSS / Sitemap)
   eleventyConfig.addGlobalData("metadata", {
     title: "久远寺洋馆",
     subtitle: "《魔法使之夜》美学博客 — 基于 11ty 与纯原生前端技术",
-    url: "https://xinji.github.io/Mahoyo", // 默认 GitHub Pages 地址
+    url: "https://xinjican.github.io/Mahoyo", // 修正为用户的实际 GitHub Pages 地址
     author: {
       name: "久远寺有珠 & 苍崎青子",
       email: "alice@kuonji.mansion"

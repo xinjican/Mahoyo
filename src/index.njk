@@ -27,7 +27,7 @@ title: 夜话
     {% set posts = collections.posts | reverse %}
     {% if posts | length %}
       {% for post in posts %}
-      <a href="{{ post.url | url }}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1.5em;">
+      <a href="{{ post.url }}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1.5em;">
         <article class="glass post-entry fade-in" style="
           padding: 1.5em 2em;
           cursor: pointer;

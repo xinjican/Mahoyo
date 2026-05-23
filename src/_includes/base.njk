@@ -23,7 +23,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   
   <!-- 引入样式表 -->
-  <link rel="stylesheet" href="{{ '/css/global.css' | url }}" />
+  <link rel="stylesheet" href="/css/global.css" />
 
   <!-- 注入全局路径变量以防 GitHub Pages 子路径下动态加载 JS 404 -->
   <script>
@@ -39,7 +39,7 @@
   </script>
   
   <!-- 延迟加载主交互逻辑 -->
-  <script defer src="{{ '/js/engine.js' | url }}"></script>
+  <script defer src="/js/engine.js"></script>
 </head>
 <body>
   {% include "components/header.njk" %}
@@ -74,7 +74,7 @@
       <div class="music-artist">— Witch on the Holy Night —</div>
     </div>
     <audio id="bgAudio" loop preload="none">
-      <source src="{{ '/css/alice-theme.mp3' | url }}" type="audio/mpeg">
+      <source src="/css/alice-theme.mp3" type="audio/mpeg">
     </audio>
   </div>
 
