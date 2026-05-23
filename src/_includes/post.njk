@@ -8,7 +8,7 @@ layout: base.njk
   padding: 7em 1.5em 4em;
 ">
   <header style="margin-bottom: 3em;">
-    <h1 class="fade-in-strong">{{ title }}</h1>
+    <h1 class="reveal-typing">{{ title }}</h1>
 
     {% if date %}
     <p class="fade-in" style="
@@ -28,6 +28,7 @@ layout: base.njk
       margin-top: 1em;
     ">
       {% for tag in tags %}
+      {% if tag != "posts" %}
       <span style="
         font-size: 0.75rem;
         color: var(--accent);
@@ -36,6 +37,7 @@ layout: base.njk
         padding: 0.2em 0.6em;
         letter-spacing: 0.03em;
       ">{{ tag }}</span>
+      {% endif %}
       {% endfor %}
     </div>
     {% endif %}

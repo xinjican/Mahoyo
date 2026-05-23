@@ -21,25 +21,41 @@
       letter-spacing: 0.08em;
       border-bottom: none;
       text-decoration: none;
-    ">久远寺洋馆</a>
+    ">久远寺邸</a>
 
     <div style="display: flex; align-items: center; gap: 1.5em;">
-      <span style="
+      <span class="header-sub-text" style="
         font-size: 0.8rem;
         color: var(--text-muted);
         letter-spacing: 0.05em;
       ">Mahōtsukai no Yoru</span>
 
-      <button class="theme-toggle" aria-label="切换主题" style="
-        background: none;
-        border: 1px solid var(--bg-surface-border);
-        border-radius: 6px;
-        padding: 0.35em 0.7em;
-        font-size: 0.9rem;
-        cursor: pointer;
-        color: var(--text-secondary);
-        transition: all 0.3s ease;
-      ">✦</button>
+      <div class="nav-actions">
+        <!-- 🔮 全文搜索按钮 -->
+        <button class="search-toggle" aria-label="搜索" id="searchToggleBtn">
+          <svg style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; display: block;" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <!-- 🔊 交互微音效 -->
+        <button class="audio-toggle" aria-label="微音效开关" id="audioToggleBtn">
+          <span class="audio-icon" style="display: block; line-height: 1; transform: scale(1.05);">🔇</span>
+        </button>
+
+        <!-- ✦ 主题切换 -->
+        <button class="theme-toggle" aria-label="切换主题" style="
+          background: none;
+          border: 1px solid var(--bg-surface-border);
+          border-radius: 6px;
+          padding: 0.35em 0.7em;
+          font-size: 0.9rem;
+          cursor: pointer;
+          color: var(--text-secondary);
+          transition: all 0.3s ease;
+        ">✦</button>
+      </div>
     </div>
   </nav>
 </header>

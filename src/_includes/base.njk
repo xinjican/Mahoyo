@@ -1,11 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="alice">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="{{ description or '魔法使之夜 — 美学博客' }}" />
-  <title>{{ title or '魔法使之夜' }} — 久远寺洋馆日志</title>
+  
+  <!-- SEO & Open Graph 元标签 -->
+  <title>{{ title or '日志' }} — 久远寺邸</title>
+  <meta name="description" content="{{ description or metadata.subtitle }}" />
+  <meta name="author" content="{{ metadata.author.name }}" />
+  <meta property="og:title" content="{{ title or '魔法使之夜' }} — 久远寺洋馆日志" />
+  <meta property="og:description" content="{{ description or metadata.subtitle }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ metadata.url }}{{ page.url }}" />
+  <meta property="og:image" content="{{ metadata.url }}/css/global.css" /> <!-- 可以使用默认的主题图 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ title or '魔法使之夜' }} — 久远寺洋馆日志" />
+  <meta name="twitter:description" content="{{ description or metadata.subtitle }}" />
+
+  <!-- 字体优化：预链接与原著美学字体加载 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  
+  <!-- 引入样式表 -->
   <link rel="stylesheet" href="{{ '/css/global.css' | url }}" />
+
+  <!-- 注入全局路径变量以防 GitHub Pages 子路径下动态加载 JS 404 -->
+  <script>
+    window.PATH_PREFIX = "{{ pathPrefix }}";
+  </script>
+
+  <!-- 首屏防闪烁（Anti-FOUC）同步脚本：强制在第一帧渲染前同步加载主题 -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("mahoyo-theme") || "alice";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
+  
+  <!-- 延迟加载主交互逻辑 -->
   <script defer src="{{ '/js/engine.js' | url }}"></script>
 </head>
 <body>
@@ -24,12 +57,39 @@
   ">
     <hr />
     <p style="margin-bottom: 0.5em;">
-      久远寺洋馆 · 三咲町
+      三咲町 · 久远寺邸
     </p>
     <p style="margin-bottom: 0;">
-      &copy; {{ now | date("YYYY") }}
-      — 魔法使之夜 美学博客
+      &copy; 1989 — Witch on the Holy Night
     </p>
   </footer>
+
+  <!-- 🎵 极美悬浮八音盒播放器 -->
+  <div class="music-player glass" id="musicPlayer">
+    <button class="music-btn" id="musicPlayBtn" aria-label="播放背景音乐">
+      <span class="music-disc-icon">💿</span>
+    </button>
+    <div class="music-info" id="musicInfo">
+      <div class="music-title">久遠寺有珠</div>
+      <div class="music-artist">— Witch on the Holy Night —</div>
+    </div>
+    <audio id="bgAudio" loop preload="none">
+      <source src="{{ '/css/alice-theme.mp3' | url }}" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <!-- 🔮 极美搜索弹出面板 -->
+  <div class="search-overlay" id="searchOverlay" aria-modal="true" role="dialog">
+    <div class="glass search-modal">
+      <div class="search-header">
+        <div class="search-title">
+          <span>🔮</span> 寻觅洋馆的线索
+        </div>
+        <button class="search-close" id="searchClose" aria-label="关闭搜索">&times;</button>
+      </div>
+      <input type="text" id="search-input" placeholder="输入关键字，如'月下'..." autocomplete="off" />
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
 </body>
 </html>

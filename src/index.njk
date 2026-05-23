@@ -1,6 +1,6 @@
 ---
 layout: base.njk
-title: 日志
+title: 夜话
 ---
 
 <div style="
@@ -14,12 +14,12 @@ title: 日志
       font-size: 2.8rem;
       margin-bottom: 0.3em;
       letter-spacing: 0.12em;
-    ">久远寺洋馆</h1>
+    ">久远寺邸</h1>
     <p class="fade-in hero-sub" style="
       color: var(--text-muted);
       font-size: 0.9rem;
       letter-spacing: 0.15em;
-    ">— 魔法使之夜 · 美学日志 —</p>
+    ">——坂之上、红屋顶的洋馆。其间栖息着两位魔女。</p>
   </section>
 
   <!-- Posts -->
@@ -27,57 +27,61 @@ title: 日志
     {% set posts = collections.posts | reverse %}
     {% if posts | length %}
       {% for post in posts %}
-      <article class="glass post-entry fade-in" style="
-        padding: 1.5em 2em;
-        margin-bottom: 1.5em;
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      "
-      onclick="window.location.href='{{ post.url | url }}';"
-      onkeydown="if(event.key==='Enter') window.location.href='{{ post.url | url }}';"
-      tabindex="0"
-      role="link"
-      >
-        <h2 style="
-          font-size: 1.2rem;
-          margin: 0 0 0.4em;
-        ">
-          <a href="{{ post.url | url }}" style="
-            color: var(--text-primary);
-            border-bottom: none;
-            text-decoration: none;
-          ">{{ post.data.title }}</a>
-        </h2>
+      <a href="{{ post.url | url }}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1.5em;">
+        <article class="glass post-entry fade-in" style="
+          padding: 1.5em 2em;
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        "
+        tabindex="0"
+        role="link"
+        >
+          <h2 style="
+            font-size: 1.2rem;
+            margin: 0 0 0.4em;
+          ">
+            <span style="
+              color: var(--text-primary);
+              border-bottom: none;
+              text-decoration: none;
+            ">{{ post.data.title }}</span>
+          </h2>
 
-        {% if post.data.date %}
-        <p style="
-          color: var(--text-muted);
-          font-size: 0.8rem;
-          margin-bottom: 0.6em;
-          letter-spacing: 0.05em;
-        ">
-          <time class="post-date" datetime="{{ post.data.date }}">{{ post.data.date }}</time>
-        </p>
-        {% endif %}
+          {% if post.data.date %}
+          <p style="
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 0.6em;
+            letter-spacing: 0.05em;
+          ">
+            <time class="post-date" datetime="{{ post.data.date }}">{{ post.data.date }}</time>
+          </p>
+          {% endif %}
 
-        {% if post.data.description %}
-        <p style="
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          line-height: 1.7;
-          margin-bottom: 0;
-        ">{{ post.data.description }}</p>
-        {% endif %}
-      </article>
+          {% if post.data.description %}
+          <p style="
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 0;
+          ">{{ post.data.description }}</p>
+          {% endif %}
+        </article>
+      </a>
       {% endfor %}
     {% else %}
+      <!-- 🔮 极富魔力沉浸感的空白占位 -->
       <div class="glass fade-in" style="
-        padding: 3em 2em;
+        padding: 4em 2em;
         text-align: center;
         color: var(--text-muted);
       ">
-        <p style="margin-bottom: 0.5em;">还没有日志。</p>
-        <p style="font-size: 0.85rem;">在 <code>src/posts/</code> 目录下创建 .md 文件即可添加。</p>
+        <p style="margin-bottom: 0.8em; font-size: 1.15rem; color: var(--text-primary); letter-spacing: 0.05em;">
+          「 结界静默，尚未寻得岁月的刻印。 」
+        </p>
+        <p style="font-size: 0.85rem; line-height: 1.6;">
+          于山丘的迷雾之中（在 <code>src/posts/</code> 目录下谱写新的诗篇）<br />以叩开洋馆沉重的大门。
+        </p>
       </div>
     {% endif %}
   </section>

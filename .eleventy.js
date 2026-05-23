@@ -1,10 +1,12 @@
-// pathPrefix 通过环境变量传入，不硬编码
-// 本地开发不设置 → 空字符串，访问 localhost:8080/
-// GitHub Pages 在 Actions 中设置 PATH_PREFIX=/Mahoyo/
-// 自定义域名不设置 → 空字符串，直接根路径
 const pathPrefix = process.env.PATH_PREFIX || "";
+const CleanCSS = require("clean-css");
+const pluginRss = require("@11ty/eleventy-plugin-rss");
+const { execSync } = require("child_process");
 
 module.exports = function (eleventyConfig) {
+  // 注册 RSS 插件 (处理 ESM 导出兼容性)
+  eleventyConfig.addPlugin(pluginRss.default || pluginRss);
+
   // 注册 Nunjucks date 过滤器
   eleventyConfig.addNunjucksFilter("date", function (date, format) {
     const d = new Date(date);
@@ -26,11 +28,42 @@ module.exports = function (eleventyConfig) {
       .replace(/D(?!\w)/g, String(day));
   });
 
+  // 注册 CleanCSS 压缩过滤器
+  eleventyConfig.addFilter("cssmin", function(code) {
+    return new CleanCSS({}).minify(code).styles;
+  });
+
   // 全局数据：当前时间
   eleventyConfig.addGlobalData("now", () => new Date().toISOString());
 
+  // 全局数据：网站元数据 (SEO / RSS / Sitemap)
+  eleventyConfig.addGlobalData("metadata", {
+    title: "久远寺洋馆",
+    subtitle: "《魔法使之夜》美学博客 — 基于 11ty 与纯原生前端技术",
+    url: "https://xinji.github.io/Mahoyo", // 默认 GitHub Pages 地址
+    author: {
+      name: "久远寺有珠 & 苍崎青子",
+      email: "alice@kuonji.mansion"
+    }
+  });
+
+  // 让 Eleventy 把 CSS 与 JS 静态文件自动复制到 _site 目录下
+  eleventyConfig.addPassthroughCopy("src/css");
+  eleventyConfig.addPassthroughCopy("src/js");
+
+  // 构建完成后自动触发 Pagefind 生成本地静态搜索索引
+  eleventyConfig.on("eleventy.after", async () => {
+    console.log("正在生成 Pagefind 搜索索引...");
+    try {
+      // 运行 pagefind 处理 _site 目录
+      execSync("npx pagefind --site _site", { stdio: "inherit" });
+      console.log("Pagefind 索引生成成功！");
+    } catch (err) {
+      console.error("生成 Pagefind 索引错误:", err);
+    }
+  });
+
   return {
-    // 不同平台通过环境变量 PATH_PREFIX 控制链接前缀
     pathPrefix,
     dir: {
       input: "src",

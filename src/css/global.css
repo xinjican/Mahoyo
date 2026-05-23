@@ -3,31 +3,30 @@
    (久远寺洋馆-有珠之夜 / 第五魔法-青子之蓝)
    ======================================== */
 
-/* --- 字体引入 --- */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap");
+/* --- 字体在 HTML 中通过 Link 异步预加载引入 --- */
 
 /* --- CSS 变量：双主题系统 --- */
 :root,
 [data-theme="aoko"] {
   /* 青子之蓝（现代亮色） */
   --bg-main: #f4f6f9;
-  --bg-surface: rgba(255, 255, 255, 0.8);
-  --bg-surface-border: rgba(0, 0, 0, 0.06);
-  --text-primary: #1e2330;
-  --text-secondary: #4a5165;
-  --text-muted: #8b90a0;
+  --bg-surface: rgba(255, 255, 255, 0.65); /* 提升至 65% 纯净透明度，保证无模糊状态下的文字绝对可读性 */
+  --bg-surface-border: rgba(255, 255, 255, 0.35); /* 晶莹发光边框 */
+  --text-primary: #0f1219;
+  --text-secondary: #242936;
+  --text-muted: #5a6275;
   --accent: #00bfff;
   --accent-glow: rgba(0, 191, 255, 0.25);
-  --divider: rgba(0, 0, 0, 0.08);
-  --shadow-color: rgba(0, 0, 0, 0.06);
-  --selection-bg: rgba(0, 191, 255, 0.2);
+  --divider: rgba(255, 255, 255, 0.15);
+  --shadow-color: rgba(0, 0, 0, 0.02); /* 极度轻薄的边缘投影 */
+  --selection-bg: rgba(0, 191, 255, 0.25);
 }
 
 [data-theme="alice"] {
   /* 有珠之夜（默认暗色） */
   --bg-main: #090a0f;
-  --bg-surface: rgba(20, 22, 33, 0.65);
-  --bg-surface-border: rgba(168, 85, 247, 0.12);
+  --bg-surface: rgba(20, 22, 33, 0.65); /* 提升至 65% 的深邃透明度 */
+  --bg-surface-border: rgba(168, 85, 247, 0.3); /* 霓虹紫发光边框 */
   --text-primary: #d2d6dc;
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
@@ -65,10 +64,31 @@ body {
     "Hiragino Mincho ProN", "HiraMinProN-W3", serif;
   line-height: 1.85;
   font-size: 1.05rem;
-  transition: background-color 0.6s ease, color 0.6s ease;
   min-height: 100vh;
   overflow-x: hidden;
+
+  /* --- 极致全屏背景原画铺满配置 --- */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
+
+/* 🔮 有珠之夜：深邃星空与花海原画 (35% 极薄暗色遮罩，让璀璨星河完全绽放) */
+[data-theme="alice"] body {
+  background-image: 
+    linear-gradient(rgba(9, 10, 15, 0.35), rgba(9, 10, 15, 0.35)),
+    url('mahoyo-bg.jpg');
+}
+
+/* ⚡ 青子之蓝：夕阳微风下的苍崎青子 (18% 极致薄羽遮罩，让夕阳和青子完美呈现，毫无遮挡感) */
+[data-theme="aoko"] body {
+  background-image: 
+    linear-gradient(rgba(244, 246, 249, 0.18), rgba(244, 246, 249, 0.18)),
+    url('mahoyo-bg-light.jpg');
+}
+
+
 
 /* --- 装饰性背景光晕 --- */
 body::before {
@@ -154,13 +174,11 @@ a:hover {
 /* --- 毛玻璃容器 --- */
 .glass {
   background: var(--bg-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--bg-surface-border);
-  border-radius: 12px;
-  box-shadow: 0 4px 24px var(--shadow-color);
-  transition: background 0.5s ease, border-color 0.5s ease,
-    box-shadow 0.5s ease;
+  border-radius: 16px; /* 更加圆润优雅的苹果 R16 圆角 */
+  box-shadow: 
+    0 10px 40px var(--shadow-color),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25); /* 顶部内边缘微弱高光反光线，营造真实玻璃厚度感 */
 }
 
 /* --- 极细分隔线 --- */
@@ -263,3 +281,332 @@ img {
     font-size: 1.25rem;
   }
 }
+
+/* --- View Transitions API 结界过渡效果 --- */
+@keyframes clip-in {
+  from {
+    clip-path: circle(0% at var(--click-x, 50%) var(--click-y, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--click-x, 50%) var(--click-y, 50%));
+  }
+}
+
+/* 当触发 View Transition 时，给新视图应用圆形扩散动画 */
+::view-transition-new(root) {
+  animation: 0.75s cubic-bezier(0.19, 1, 0.22, 1) both clip-in;
+  mix-blend-mode: normal;
+  z-index: 999;
+}
+
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  z-index: 1;
+}
+
+/* --- 极美搜索面板 (Search Modal) --- */
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 15vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.search-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.search-modal {
+  width: 90%;
+  max-width: 600px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5em 2em;
+  transform: translateY(-20px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.search-overlay.active .search-modal {
+  transform: translateY(0);
+}
+
+.search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+  border-bottom: 1px solid var(--divider);
+  padding-bottom: 0.8em;
+}
+
+.search-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.search-close {
+  background: none;
+  border: 1px solid var(--bg-surface-border);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.search-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+#search-input {
+  width: 100%;
+  padding: 0.8em 1.2em;
+  border: 1px solid var(--bg-surface-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+[data-theme="aoko"] #search-input {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+#search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.search-results {
+  overflow-y: auto;
+  margin-top: 1em;
+  flex: 1;
+  padding-right: 0.5em;
+}
+
+/* Pagefind 结果项样式 */
+.pagefind-result {
+  padding: 1.2em;
+  border-radius: 8px;
+  margin-bottom: 0.8em;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pagefind-result:hover {
+  border-color: var(--bg-surface-border);
+  background: var(--bg-surface);
+  transform: translateY(-1px);
+}
+
+.pagefind-result-title a {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border: none;
+}
+
+.pagefind-result-title a:hover {
+  color: var(--accent);
+}
+
+.pagefind-result-excerpt {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 0.4em;
+}
+
+.pagefind-result-excerpt mark {
+  background: var(--selection-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+/* --- 文字雾化出现演出动画 --- */
+.reveal-char {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(10px);
+  transform: scale(0.9);
+  animation: char-fade-blur 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes char-fade-blur {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+/* --- 交互控制样式 --- */
+.audio-toggle, .search-toggle {
+  background: none;
+  border: 1px solid var(--bg-surface-border);
+  border-radius: 6px;
+  padding: 0.35em 0.7em;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-toggle:hover, .audio-toggle.active,
+.search-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+/* --- 原著高定西文字型应用 --- */
+.header-sub-text {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 0.75rem !important;
+}
+
+.post-date, time {
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  font-size: 1.05rem !important;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+footer {
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', 'Tsukushi Mincho', '游明朝', serif;
+}
+
+footer p {
+  letter-spacing: 0.08em;
+}
+
+/* --- 🎵 极美浮动八音盒播放器 (Apple Glassmorphism Widget) --- */
+.music-player {
+  position: fixed;
+  bottom: 2em;
+  left: 2em; /* 放在左下角，避开可能存在的右下角交互件 */
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  padding: 0.6em;
+  border-radius: 40px !important;
+  max-width: 50px;
+  overflow: hidden;
+  transition: max-width 0.55s cubic-bezier(0.19, 1, 0.22, 1), padding 0.4s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  cursor: pointer;
+}
+
+.music-player:hover,
+.music-player.active {
+  max-width: 240px; /* 悬浮展开展示完整音轨标签 */
+  padding-right: 1.5em;
+}
+
+.music-btn {
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
+}
+
+.music-disc-icon {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* 💿 唱片旋转动画 */
+@keyframes disc-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.music-player.playing .music-disc-icon {
+  animation: disc-spin 8s linear infinite;
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.music-info {
+  margin-left: 0.8em;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.35s ease 0.1s;
+  pointer-events: none;
+}
+
+.music-player:hover .music-info,
+.music-player.active .music-info {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.music-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+.music-artist {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+  margin-top: 0.25em;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.03em;
+}
+
