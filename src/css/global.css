@@ -472,26 +472,27 @@ img {
   }
 }
 
-/* --- 交互控制样式 --- */
-.audio-toggle, .search-toggle {
+.nav-actions button {
   background: none;
   border: 1px solid var(--bg-surface-border);
-  border-radius: 6px;
-  padding: 0.35em 0.7em;
-  font-size: 0.9rem;
+  border-radius: 8px; /* 提升为 8px 圆角，更有高级质感 */
+  width: 34px;        /* 强行固定为 34px 完美正方形，保证尺寸完全一致 */
+  height: 34px;
+  font-size: 0.95rem; /* 微调字体大小 */
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;         /* 移除内边距，完全由 flex 居中 */
 }
 
-.audio-toggle:hover, .audio-toggle.active,
-.search-toggle:hover {
+.nav-actions button:hover,
+.nav-actions button.active {
   color: var(--accent);
   border-color: var(--accent);
-  box-shadow: 0 0 10px var(--accent-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .nav-actions {
