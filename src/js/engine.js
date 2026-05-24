@@ -5,6 +5,7 @@
 "use strict";
 
 (function () {
+  let updateBGMTrack = null; // 用于在主题切换时同步通知唱片机更新
   /* ---------- 1. 魔法微音效合成器 (Web Audio API Synthesizer) ---------- */
   const AUDIO_KEY = "mahoyo-sfx-enabled";
   let audioCtx = null;
@@ -194,6 +195,10 @@
     document.querySelectorAll(".theme-toggle").forEach((btn) => {
       btn.setAttribute("aria-label", theme === "alice" ? "切换亮色" : "切换暗色");
     });
+
+    if (typeof updateBGMTrack === "function") {
+      updateBGMTrack(theme);
+    }
   }
 
   function initTheme() {
@@ -463,7 +468,7 @@
     });
   }
 
-  /* ---------- 8. 🎵 背景音乐八音盒控制器 (无缝跨页面续播) ---------- */
+  /* ---------- 8. 🎵 背景音乐八音盒控制器 (无缝跨页面续播 + 双主题智能BGM切换) ---------- */
   function initMusicPlayer() {
     const player = document.getElementById("musicPlayer");
     const audio = document.getElementById("bgAudio");
@@ -471,14 +476,81 @@
 
     if (!player || !audio || !playBtn) return;
 
+    const trackTitleEl = player.querySelector(".music-title");
+    const trackArtistEl = player.querySelector(".music-artist");
+
+    // 双主题音乐资产配置
+    const TRACKS = {
+      alice: {
+        src: (window.PATH_PREFIX || "") + "/css/alice-theme.mp3",
+        title: "久遠寺有珠",
+        artist: "— Witch on the Holy Night —"
+      },
+      aoko: {
+        src: (window.PATH_PREFIX || "") + "/css/aoko-theme.mp3",
+        title: "苍崎青子",
+        artist: "— Aoko Aozaki —"
+      }
+    };
+
     const STATE_KEY = "mahoyo-bgm-playing";
     const TIME_KEY = "mahoyo-bgm-time";
 
     let isPlaying = sessionStorage.getItem(STATE_KEY) === "true";
     let savedTime = parseFloat(sessionStorage.getItem(TIME_KEY) || "0");
 
-    // 初始化音频的当前播放进度
-    audio.currentTime = savedTime;
+    // 初始化背景音乐与轨道元数据
+    const theme = getTheme();
+    const track = TRACKS[theme] || TRACKS.alice;
+    
+    audio.setAttribute("src", track.src);
+    audio.load();
+    if (trackTitleEl) trackTitleEl.textContent = track.title;
+    if (trackArtistEl) trackArtistEl.textContent = track.artist;
+
+    // 检查缓存的轨道类型，若轨道切换了则进度归零，否则接续进度
+    const savedTrack = sessionStorage.getItem("mahoyo-bgm-track");
+    if (savedTrack === theme) {
+      audio.currentTime = savedTime;
+    } else {
+      audio.currentTime = 0;
+      sessionStorage.setItem("mahoyo-bgm-track", theme);
+    }
+
+    // 暴露给外部调用的音轨切换接口
+    updateBGMTrack = function(newTheme) {
+      const newTrack = TRACKS[newTheme] || TRACKS.alice;
+      
+      // 避免重复加载相同音源
+      const targetUrl = new URL(newTrack.src, window.location.href).href;
+      if (audio.src !== targetUrl) {
+        const wasPlaying = isPlaying;
+        
+        audio.pause();
+        audio.setAttribute("src", newTrack.src);
+        audio.load();
+        
+        if (trackTitleEl) trackTitleEl.textContent = newTrack.title;
+        if (trackArtistEl) trackArtistEl.textContent = newTrack.artist;
+        
+        sessionStorage.setItem("mahoyo-bgm-track", newTheme);
+        
+        if (wasPlaying) {
+          audio.currentTime = 0;
+          audio.play().then(() => {
+            player.classList.add("playing");
+            isPlaying = true;
+          }).catch(err => {
+            console.warn("Auto play new BGM track failed:", err);
+            player.classList.remove("playing");
+            isPlaying = false;
+            sessionStorage.setItem(STATE_KEY, "false");
+          });
+        } else {
+          audio.currentTime = 0;
+        }
+      }
+    };
 
     if (isPlaying) {
       // 若之前属于播放状态，新页面载入后尝试自动接续播放
