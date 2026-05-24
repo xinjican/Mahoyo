@@ -2,7 +2,6 @@
 title: 第一夜 · 始
 date: 2026-05-23
 description: 欢迎来到三咲町的山丘。在寒冷的空气中，那座红屋顶的洋馆正静默地注视着时代的洪流。
-cover: "/css/mahoyo-bg.jpg"
 tags:
   - 随笔
   - 月
