@@ -33,7 +33,11 @@
   <!-- 首屏防闪烁（Anti-FOUC）同步脚本：强制在第一帧渲染前同步加载主题 -->
   <script>
     (function () {
-      const savedTheme = localStorage.getItem("mahoyo-theme") || "alice";
+      let savedTheme = localStorage.getItem("mahoyo-theme");
+      if (!savedTheme) {
+        const hour = new Date().getHours();
+        savedTheme = (hour >= 6 && hour < 18) ? "aoko" : "alice";
+      }
       document.documentElement.setAttribute("data-theme", savedTheme);
     })();
   </script>

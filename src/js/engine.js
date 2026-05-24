@@ -91,6 +91,52 @@
 
         osc.start(now);
         osc.stop(now + 0.4);
+      } else if (type === "reveal-char") {
+        // 键盘打字/羊皮纸摩擦的微弱物理敲击声
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1800, now);
+        osc.frequency.exponentialRampToValueAtTime(1000, now + 0.015);
+
+        gain.gain.setValueAtTime(0.003, now); // 极低音量防止尖锐刺耳
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.015);
+      } else if (type === "clock-chime") {
+        // 古老洋馆大座钟的整点幽邃钟鸣
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(100, now); // 基频 100Hz
+        osc1.frequency.exponentialRampToValueAtTime(50, now + 4.0);
+
+        osc2.type = "triangle";
+        osc2.frequency.setValueAtTime(150, now); // 第三谐音 150Hz
+        osc2.frequency.exponentialRampToValueAtTime(75, now + 4.0);
+
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(320, now); // 低通过滤，营造出厚重感与历史感
+
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.0);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 4.0);
+        osc2.stop(now + 4.0);
       }
     } catch (err) {
       console.warn("SFX synthesis failed:", err);
@@ -201,6 +247,12 @@
         // 非换行空格处理
         span.textContent = char === " " ? "\u00A0" : char; 
         span.style.animationDelay = `${idx * 0.05 + 0.1}s`;
+        
+        // 绑定字词雾化浮现瞬间的微音效，完美音画对齐
+        span.addEventListener("animationstart", () => {
+          playSFX("reveal-char");
+        });
+        
         el.appendChild(span);
       });
     });
@@ -572,6 +624,39 @@
     });
   }
 
+  /* ---------- 10. 三咲町古旧座钟控制与整点钟声 ---------- */
+  function initMansionClock() {
+    const clockEl = document.getElementById("mansionClock");
+    if (!clockEl) return;
+
+    const timeEl = clockEl.querySelector(".mansion-clock-time");
+    if (!timeEl) return;
+
+    let lastHour = -1;
+
+    function updateTime() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const s = now.getSeconds();
+
+      // 格式化输出为 Tabular 数字 hh:mm:ss
+      timeEl.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+
+      // 整点鸣响判定（当分钟和秒数首次归零时触发，且排除初次加载以防打扰）
+      if (m === 0 && s === 0) {
+        if (lastHour !== h && lastHour !== -1) {
+          playSFX("clock-chime");
+        }
+      }
+      lastHour = h;
+    }
+
+    // 初始化一次并启动每秒轮询
+    updateTime();
+    setInterval(updateTime, 1000);
+  }
+
   /* ---------- 启动 ---------- */
   document.addEventListener("DOMContentLoaded", () => {
     initTheme();
@@ -585,6 +670,7 @@
     bindGlobalClicks();
     initMusicPlayer();
     initPjaxRouter();
+    initMansionClock();
 
     // 主题切换按钮事件绑定（捕获 click 事件并传递以便获取原点坐标）
     document.querySelectorAll(".theme-toggle").forEach((btn) => {

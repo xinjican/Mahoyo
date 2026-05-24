@@ -4,6 +4,46 @@ const CleanCSS = require("clean-css");
 const pluginRss = require("@11ty/eleventy-plugin-rss");
 const { execSync } = require("child_process");
 module.exports = function (eleventyConfig) {
+  // 注册 Markdown 中二注音语法规则 ({汉字|注音} -> <ruby>汉字<rt>注音</rt></ruby>)
+  eleventyConfig.amendLibrary("md", mdLib => {
+    mdLib.inline.ruler.push("ruby_bracket", (state, silent) => {
+      const max = state.posMax;
+      const start = state.pos;
+      if (state.src.charCodeAt(start) !== 123 /* { */) return false;
+
+      let pos = start + 1;
+      let foundPipe = -1;
+      while (pos < max) {
+        const code = state.src.charCodeAt(pos);
+        if (code === 124 /* | */) {
+          foundPipe = pos;
+        } else if (code === 125 /* } */) {
+          if (foundPipe !== -1 && foundPipe > start + 1 && pos > foundPipe + 1) {
+            if (!silent) {
+              state.push("ruby_open", "ruby", 1);
+
+              const token_t1 = state.push("text", "", 0);
+              token_t1.content = state.src.slice(start + 1, foundPipe);
+
+              state.push("rt_open", "rt", 1);
+
+              const token_t2 = state.push("text", "", 0);
+              token_t2.content = state.src.slice(foundPipe + 1, pos);
+
+              state.push("rt_close", "rt", -1);
+              state.push("ruby_close", "ruby", -1);
+            }
+            state.pos = pos + 1;
+            return true;
+          }
+          break;
+        }
+        pos++;
+      }
+      return false;
+    });
+  });
+
   // 注册 RSS 插件 (处理 ESM 导出兼容性)
   eleventyConfig.addPlugin(pluginRss.default || pluginRss);
 

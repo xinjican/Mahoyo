@@ -611,3 +611,95 @@ footer p {
   letter-spacing: 0.03em;
 }
 
+/* --- 🎭 奈须蘑菇注音排版系统 (Ruby Text) --- */
+ruby {
+  ruby-position: over;
+  ruby-align: center;
+}
+
+rt {
+  font-family: 'Cinzel', 'Noto Serif SC', serif;
+  font-size: 0.58em;              /* 注音字符微缩 */
+  font-weight: 500;
+  color: var(--accent);          /* 炫酷的主题强调色 */
+  letter-spacing: 0.08em;
+  padding-bottom: 0.15em;
+  text-shadow: 0 0 4px var(--accent-glow);
+  user-select: none;             /* 禁止注音文字干扰正常的文章内容选择复制 */
+}
+
+/* --- 🕰️ 三咲町古旧座钟样式 --- */
+.mansion-clock {
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  border-left: 1px solid var(--divider);
+  padding-left: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  user-select: none;
+}
+
+.mansion-clock-icon {
+  font-size: 0.85rem;
+  display: inline-block;
+  animation: clock-swing 3s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes clock-swing {
+  0% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(10deg);
+  }
+}
+
+.mansion-clock-time {
+  font-variant-numeric: tabular-nums; /* 防止数字晃动 */
+}
+
+/* 移动端自适应隐藏座钟以防导航栏溢出 */
+@media (max-width: 580px) {
+  .mansion-clock {
+    display: none;
+  }
+}
+
+/* --- 🖼️ 极美文章水晶插画封面卡片样式 (Inset Vignette Cover) --- */
+.post-cover-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--divider);
+}
+
+.post-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 偏光偏析微偏色滤镜效果 */
+  filter: contrast(1.05) brightness(0.95);
+}
+
+.post-cover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(9, 10, 15, 0) 60%, var(--shadow-color) 100%);
+  pointer-events: none;
+}
+
+/* 悬停运镜放大 */
+.post-entry:hover .post-cover-img {
+  transform: scale(1.04);
+}
+

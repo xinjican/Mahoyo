@@ -29,43 +29,53 @@ title: 夜话
       {% for post in posts %}
       <a href="{{ post.url }}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 1.5em;">
         <article class="glass post-entry fade-in" style="
-          padding: 1.5em 2em;
+          padding: 0;
+          overflow: hidden;
           cursor: pointer;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         "
         tabindex="0"
         role="link"
         >
-          <h2 style="
-            font-size: 1.2rem;
-            margin: 0 0 0.4em;
-          ">
-            <span style="
-              color: var(--text-primary);
-              border-bottom: none;
-              text-decoration: none;
-            ">{{ post.data.title }}</span>
-          </h2>
-
-          {% if post.data.date %}
-          <p style="
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-bottom: 0.6em;
-            letter-spacing: 0.05em;
-          ">
-            <time class="post-date" datetime="{{ post.data.date }}">{{ post.data.date }}</time>
-          </p>
+          {% if post.data.cover %}
+          <div class="post-cover-container">
+            <img src="{{ post.data.cover }}" alt="{{ post.data.title }} Cover" class="post-cover-img" />
+            <div class="post-cover-overlay"></div>
+          </div>
           {% endif %}
 
-          {% if post.data.description %}
-          <p style="
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.7;
-            margin-bottom: 0;
-          ">{{ post.data.description }}</p>
-          {% endif %}
+          <div class="post-content-wrapper" style="padding: 1.5em 2em;">
+            <h2 style="
+              font-size: 1.2rem;
+              margin: 0 0 0.4em;
+            ">
+              <span style="
+                color: var(--text-primary);
+                border-bottom: none;
+                text-decoration: none;
+              ">{{ post.data.title }}</span>
+            </h2>
+
+            {% if post.data.date %}
+            <p style="
+              color: var(--text-muted);
+              font-size: 0.8rem;
+              margin-bottom: 0.6em;
+              letter-spacing: 0.05em;
+            ">
+              <time class="post-date" datetime="{{ post.data.date }}">{{ post.data.date }}</time>
+            </p>
+            {% endif %}
+
+            {% if post.data.description %}
+            <p style="
+              color: var(--text-secondary);
+              font-size: 0.9rem;
+              line-height: 1.7;
+              margin-bottom: 0;
+            ">{{ post.data.description }}</p>
+            {% endif %}
+          </div>
         </article>
       </a>
       {% endfor %}
@@ -90,9 +100,7 @@ title: 夜话
 <style>
   .post-entry:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 28px var(--shadow-color);
-  }
-  .post-entry h2 a:hover {
-    color: var(--accent);
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 22px var(--accent-glow) !important;
   }
 </style>
