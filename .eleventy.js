@@ -1,8 +1,8 @@
 const pathPrefix = process.env.PATH_PREFIX || "";
-const siteUrl = process.env.SITE_URL || "https://xinjican.github.io/Mahoyo";
+const rawSiteUrl = process.env.SITE_URL || "https://xinjican.github.io/Mahoyo/";
+const siteUrl = rawSiteUrl.endsWith("/") ? rawSiteUrl : `${rawSiteUrl}/`;
 const CleanCSS = require("clean-css");
 const pluginRss = require("@11ty/eleventy-plugin-rss");
-const { execSync } = require("child_process");
 module.exports = function (eleventyConfig) {
   // 注册 Markdown 中二注音语法规则 ({汉字|注音} -> <ruby>汉字<rt>注音</rt></ruby>)
   eleventyConfig.amendLibrary("md", mdLib => {
@@ -95,18 +95,6 @@ module.exports = function (eleventyConfig) {
   // 让 Eleventy 把 CSS 与 JS 静态文件自动复制到 _site 目录下
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/js");
-
-  // 构建完成后自动触发 Pagefind 生成本地静态搜索索引
-  eleventyConfig.on("eleventy.after", async () => {
-    console.log("正在生成 Pagefind 搜索索引...");
-    try {
-      // 运行 pagefind 处理 _site 目录
-      execSync("npx pagefind --site _site", { stdio: "inherit" });
-      console.log("Pagefind 索引生成成功！");
-    } catch (err) {
-      console.error("生成 Pagefind 索引错误:", err);
-    }
-  });
 
   return {
     pathPrefix,
