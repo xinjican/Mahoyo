@@ -293,8 +293,13 @@
 
     if (!overlay || !closeBtn || !toggleBtn || !input) return;
 
+    let lastFocusedEl = null;
+
     async function openSearch() {
+      lastFocusedEl = document.activeElement;
       overlay.classList.add("active");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("search-open");
       input.focus();
       playSFX("click");
       await initPagefind();
@@ -302,9 +307,14 @@
 
     function closeSearch() {
       overlay.classList.remove("active");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("search-open");
       playSFX("click");
       input.value = "";
       resultsContainer.innerHTML = "";
+      if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
+        lastFocusedEl.focus();
+      }
     }
 
     toggleBtn.addEventListener("click", (e) => {
@@ -372,6 +382,26 @@
         openSearch();
       } else if (e.key === "Escape" && overlay.classList.contains("active")) {
         closeSearch();
+      }
+    });
+
+    overlay.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab") return;
+
+      const focusable = overlay.querySelectorAll(
+        'button, input, [href], select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     });
   }
@@ -453,6 +483,7 @@
   /* ---------- 绑定普通的 UI 点击微音效 ---------- */
   function bindGlobalClicks() {
     document.querySelectorAll("a, button, .post-entry").forEach((el) => {
+      if (el.dataset.sfxBound === "true") return;
       // 排除主题与音效控制键，因为它们本身有专门的独立音效逻辑
       if (
         el.classList.contains("theme-toggle") ||
@@ -465,6 +496,7 @@
       el.addEventListener("click", () => {
         playSFX("click");
       });
+      el.dataset.sfxBound = "true";
     });
   }
 
@@ -662,6 +694,9 @@
 
         // 2. 异步拉取新页面 HTML
         const response = await fetch(path);
+        if (!response.ok) {
+          throw new Error(`Navigation request failed: ${response.status}`);
+        }
         const html = await response.text();
 
         // 3. 解析新页面 DOM 结构
@@ -670,7 +705,9 @@
 
         // 4. 更新网页标题与浏览器历史地址栏
         document.title = doc.title;
-        window.history.pushState({}, doc.title, path);
+        if (window.location.pathname !== path) {
+          window.history.pushState({}, doc.title, path);
+        }
 
         // 5. 替换主体 <main> 内容，窗口滚动至顶部
         const newMain = doc.querySelector("main");

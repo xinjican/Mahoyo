@@ -11,8 +11,8 @@
   <meta property="og:title" content="{{ title or '魔法使之夜' }} — 久远寺洋馆日志" />
   <meta property="og:description" content="{{ description or metadata.subtitle }}" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{ metadata.url }}{{ page.url }}" />
-  <meta property="og:image" content="{{ metadata.url }}/css/global.css" /> <!-- 可以使用默认的主题图 -->
+  <meta property="og:url" content="{{ page.url | absoluteUrl(metadata.url) }}" />
+  <meta property="og:image" content="{{ 'css/mahoyo-bg.jpg' | absoluteUrl(metadata.url) }}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ title or '魔法使之夜' }} — 久远寺洋馆日志" />
   <meta name="twitter:description" content="{{ description or metadata.subtitle }}" />
@@ -48,7 +48,7 @@
 <body>
   {% include "components/header.njk" %}
 
-  <main class="fade-in">
+  <main class="fade-in" data-pagefind-body>
     {{ content | safe }}
   </main>
 
@@ -63,8 +63,11 @@
     <p style="margin-bottom: 0.5em;">
       三咲町 · 久远寺邸
     </p>
-    <p style="margin-bottom: 0;">
+    <p style="margin-bottom: 0.5em;">
       &copy; 1989 — Witch on the Holy Night
+    </p>
+    <p style="margin-bottom: 0;">
+      <a href="https://icp.gov.moe/?keyword=20260631" target="_blank">萌ICP备20260631号</a>
     </p>
   </footer>
 
@@ -83,10 +86,10 @@
   </div>
 
   <!-- 🔮 极美搜索弹出面板 -->
-  <div class="search-overlay" id="searchOverlay" aria-modal="true" role="dialog">
+  <div class="search-overlay" id="searchOverlay" aria-modal="true" aria-hidden="true" aria-labelledby="searchTitle" role="dialog">
     <div class="glass search-modal">
       <div class="search-header">
-        <div class="search-title">
+        <div class="search-title" id="searchTitle">
           <span>🔮</span> 寻觅洋馆的线索
         </div>
         <button class="search-close" id="searchClose" aria-label="关闭搜索">&times;</button>

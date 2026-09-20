@@ -74,6 +74,10 @@ body {
   background-repeat: no-repeat;
 }
 
+body.search-open {
+  overflow: hidden;
+}
+
 /* 🔮 有珠之夜：深邃星空与花海原画 (35% 极薄暗色遮罩，让璀璨星河完全绽放) */
 [data-theme="alice"] body {
   background-image: 
@@ -279,6 +283,25 @@ img {
 
   h2 {
     font-size: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .fade-in,
+  .fade-in-strong,
+  .reveal-char {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
   }
 }
 
@@ -702,4 +725,3 @@ rt {
 .post-entry:hover .post-cover-img {
   transform: scale(1.04);
 }
-
